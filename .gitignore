@@ -17,3 +17,6 @@ velocity.log.*
 dependency-reduced-pom.xml
 
 .protegedata/
+
+# Docker
+docker-compose.override.yml
