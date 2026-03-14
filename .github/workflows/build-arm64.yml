@@ -1,0 +1,36 @@
+name: Build WebProtege ARM64
+
+# 允许我们在网页上手动触发此脚本
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-export:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 1. 拉取源代码
+        uses: actions/checkout@v4
+
+      - name: 2. 配置 QEMU (支持 ARM64 跨架构)
+        uses: docker/setup-qemu-action@v3
+
+      - name: 3. 配置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 4. 编译 ARM64 镜像并打包为 tar
+        # 这里直接指定输出为 tar 文件，完美契合你的离线部署需求
+        run: |
+          docker buildx build \
+            --platform linux/arm64 \
+            --build-arg WEBPROTEGE_VERSION=5.0.0-SNAPSHOT \
+            -t ascend-webprotege:arm64 \
+            -o type=tar,dest=webprotege_arm64.tar \
+            .
+
+      - name: 5. 上传产物供下载
+        uses: actions/upload-artifact@v4
+        with:
+          name: webprotege-arm64-image
+          path: webprotege_arm64.tar
+          retention-days: 3 # 产物保留 3 天
