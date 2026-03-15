@@ -25,7 +25,7 @@ jobs:
             --platform linux/arm64 \
             --build-arg WEBPROTEGE_VERSION=5.0.0-SNAPSHOT \
             -t ascend-webprotege:arm64 \
-            -o type=tar,dest=webprotege_arm64.tar \
+            -o type=docker,dest=webprotege_arm64.tar \
             .
 
       - name: 5. 上传产物供下载
